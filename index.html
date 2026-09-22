@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="robots" content="noindex, nofollow" />
+    <meta name="color-scheme" content="dark" />
+    <title>Un jardín</title>
+  </head>
+  <body>
+    <canvas id="lienzo"></canvas>
+
+    <div id="intro" class="capa">
+      <div class="intro-contenido">
+        <p class="intro-linea">Hay un lugar que hice para ti.</p>
+        <button id="entrar" type="button" disabled>preparando…</button>
+        <p class="intro-nota">Con audífonos, sin prisa.</p>
+      </div>
+    </div>
+
+    <div id="incompatible" class="capa oculto">
+      <div class="intro-contenido">
+        <p class="intro-linea">Este navegador no puede dibujar el jardín.</p>
+        <p class="intro-nota">Prueba con Chrome, Edge, Firefox o Safari actualizados.</p>
+      </div>
+    </div>
+
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>

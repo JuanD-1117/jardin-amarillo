@@ -94,3 +94,75 @@ html, body {
 @media (prefers-reduced-motion: reduce) {
   .capa { transition-duration: 0.2s; }
 }
+
+/* --- Capa narrativa ------------------------------------------------------ */
+
+.mensaje {
+  position: fixed;
+  left: 50%;
+  bottom: 16vh;
+  transform: translateX(-50%);
+  width: min(30ch, calc(100vw - 48px));
+  margin: 0;
+  text-align: center;
+  font-size: clamp(1.1rem, 3.4vw, 1.55rem);
+  line-height: 1.55;
+  color: var(--texto);
+  text-shadow: 0 2px 18px rgba(0, 0, 0, 0.75);
+  opacity: 0;
+  transition: opacity 2.2s ease;
+  pointer-events: none;
+  z-index: 5;
+}
+
+.mensaje.visible { opacity: 1; }
+
+.pista {
+  position: fixed;
+  left: 50%;
+  top: 4vh;
+  transform: translateX(-50%);
+  margin: 0;
+  font-size: 0.78rem;
+  letter-spacing: 0.14em;
+  color: var(--tenue);
+  text-shadow: 0 1px 10px rgba(0, 0, 0, 0.8);
+  opacity: 0;
+  transition: opacity 1.4s ease;
+  pointer-events: none;
+  z-index: 5;
+}
+
+.pista.visible { opacity: 1; }
+
+.avanzar {
+  position: fixed;
+  left: 50%;
+  bottom: calc(4vh + env(safe-area-inset-bottom, 0px));
+  transform: translateX(-50%);
+  width: 68px;
+  height: 68px;
+  border-radius: 50%;
+  border: 1px solid rgba(242, 230, 207, 0.3);
+  background: rgba(0, 0, 0, 0.22);
+  color: var(--texto);
+  font-size: 1.1rem;
+  line-height: 1;
+  opacity: 0;
+  transition: opacity 0.9s ease, background 0.25s ease;
+  pointer-events: none;
+  z-index: 6;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.avanzar.visible {
+  opacity: 0.55;
+  pointer-events: auto;
+}
+
+.avanzar:active { background: rgba(232, 177, 76, 0.25); }
+
+/* El botón solo aparece donde no hay teclado. */
+@media (hover: hover) and (pointer: fine) {
+  .avanzar.visible { opacity: 0; pointer-events: none; }
+}

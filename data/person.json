@@ -1,6 +1,9 @@
 {
   "nombre": "",
-  "mensajeApertura": "",
-  "mensajeFinal": "",
-  "recuerdos": []
+
+  "llegada": "Hay sitios que uno construye para alguien.",
+  "sendero": "Camina. No hay prisa, y el campo no se acaba.",
+  "revelacion": "Esto solo se ve desde arriba.",
+  "noche": "El sol se va, el campo se queda.",
+  "final": "Siempre habrá un lugar para ti aquí."
 }

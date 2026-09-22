@@ -1,22 +1,25 @@
 import './ui/styles.css';
 import * as THREE from 'three/webgpu';
-import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
 import { elegirNivel, nivelForzado } from './core/quality.js';
-import { crearTerreno, alturaTerreno, centroSendero } from './scene/terrain.js';
+import { crearExperiencia, ESTADO } from './core/experience.js';
+import { crearTerreno, alturaTerreno } from './scene/terrain.js';
 import { crearCampo } from './scene/field.js';
-import { crearIluminacion } from './scene/lighting.js';
+import { crearAtmosfera } from './scene/atmosphere.js';
+import { crearMovimiento } from './interaction/movement.js';
+import { crearMensajes } from './ui/messages.js';
 import { crearIntro } from './ui/intro.js';
 
-/** Cielo de hora dorada. La niebla usa el mismo color para que el campo funda. */
-const COLOR_CIELO = new THREE.Color(0xdca85f);
-
 const lienzo = document.getElementById('lienzo');
+const botonAvanzar = document.getElementById('avanzar');
+
+const reloj = new THREE.Clock();
 
 let renderer;
 let escena;
 let camara;
-let controles;
+let atmosfera;
+let experiencia;
 
 function ajustarTamano() {
   const ancho = window.innerWidth;
@@ -39,48 +42,64 @@ async function construir() {
   renderer.toneMappingExposure = 1.05;
 
   escena = new THREE.Scene();
-  escena.background = COLOR_CIELO;
-  escena.fog = new THREE.Fog(COLOR_CIELO, nivel.nieblaCerca, nivel.nieblaLejos);
+  escena.background = new THREE.Color(0x000000);
+  escena.fog = new THREE.Fog(0x000000, nivel.nieblaCerca, nivel.nieblaLejos);
 
-  camara = new THREE.PerspectiveCamera(55, window.innerWidth / window.innerHeight, 0.1, 400);
-
-  // La cámara arranca a la entrada del sendero, a altura de persona.
-  const zInicial = -nivel.radioCampo * 0.88;
-  const xInicial = centroSendero(zInicial);
-  camara.position.set(xInicial, alturaTerreno(xInicial, zInicial) + 1.55, zInicial);
+  camara = new THREE.PerspectiveCamera(58, window.innerWidth / window.innerHeight, 0.1, 600);
 
   escena.add(crearTerreno(nivel));
-  const { malla, total } = crearCampo(nivel);
+  const { malla, total, corazon } = await crearCampo(nivel);
   escena.add(malla);
-  crearIluminacion(escena);
 
-  controles = new OrbitControls(camara, renderer.domElement);
-  controles.enableDamping = true;
-  controles.dampingFactor = 0.06;
-  controles.minDistance = 0.8;
-  controles.maxDistance = 30;
-  // Impide que la cámara se meta bajo el terreno.
-  controles.maxPolarAngle = Math.PI * 0.495;
-  const zObjetivo = zInicial + 6;
-  controles.target.set(centroSendero(zObjetivo), alturaTerreno(xInicial, zObjetivo) + 1.2, zObjetivo);
-  controles.update();
+  atmosfera = crearAtmosfera(escena, nivel);
+
+  const movimiento = crearMovimiento({
+    lienzo,
+    boton: botonAvanzar,
+    alturaSuelo: alturaTerreno,
+    radioLimite: nivel.radioCampo * 0.97
+  });
+
+  const mensajes = crearMensajes();
+
+  experiencia = crearExperiencia({
+    camara, escena, nivel, corazon, atmosfera, movimiento, mensajes
+  });
 
   window.addEventListener('resize', ajustarTamano);
 
   // Compilar antes de mostrar evita el tirón del primer fotograma.
   await renderer.compileAsync(escena, camara);
 
+  if (new URLSearchParams(location.search).has('debug')) {
+    window.__jardin = {
+      renderer, escena, camara, nivel, corazon, atmosfera, experiencia,
+      /** Teletransporta al corazón para disparar la revelación sin caminar. */
+      irAlCorazon() {
+        camara.position.set(corazon.centroX, alturaTerreno(0, corazon.centroZ) + 1.55, corazon.centroZ);
+      }
+    };
+  }
+
   console.info(`[jardin] backend=${backend} nivel=${nivel.nombre} girasoles=${total}`);
   return { nivel, total, backend };
 }
 
 function dibujar() {
-  controles.update();
+  const delta = Math.min(reloj.getDelta(), 0.05);
+
+  experiencia.actualizar(delta);
+  atmosfera.seguirCamara(camara);
+
+  // El botón táctil solo tiene sentido mientras el visitante lleva el mando.
+  botonAvanzar.classList.toggle('visible', experiencia.estado === ESTADO.PASEO);
+
   renderer.render(escena, camara);
 }
 
 const intro = crearIntro({
   alEntrar() {
+    reloj.getDelta();
     renderer.setAnimationLoop(dibujar);
   }
 });

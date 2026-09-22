@@ -29,7 +29,10 @@ export function anchoSendero(z) {
 }
 
 export function crearTerreno(nivel) {
-  const lado = nivel.radioCampo * 2.8;
+  // El suelo desborda con mucho el campo sembrado: desde la vista aérea, un
+  // terreno ajustado al radio del campo enseña su propio borde recortado
+  // contra el cielo y rompe la ilusión de paisaje.
+  const lado = nivel.radioCampo * 8;
   const geometria = new THREE.PlaneGeometry(lado, lado, nivel.segmentosTerreno, nivel.segmentosTerreno);
   geometria.rotateX(-Math.PI / 2);
 

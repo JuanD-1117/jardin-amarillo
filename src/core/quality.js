@@ -9,33 +9,33 @@
 export const NIVELES = {
   alto: {
     nombre: 'alto',
-    girasoles: 14000,
-    radioCampo: 46,
+    girasoles: 15000,
+    radioCampo: 32,
     segmentosTerreno: 192,
-    petalos: 16,
     pixelRatioMax: 2,
-    nieblaCerca: 18,
-    nieblaLejos: 95
+    estrellas: 2600,
+    nieblaCerca: 14,
+    nieblaLejos: 78
   },
   medio: {
     nombre: 'medio',
-    girasoles: 5000,
-    radioCampo: 34,
+    girasoles: 8000,
+    radioCampo: 24,
     segmentosTerreno: 128,
-    petalos: 12,
     pixelRatioMax: 1.5,
-    nieblaCerca: 14,
-    nieblaLejos: 70
+    estrellas: 1400,
+    nieblaCerca: 11,
+    nieblaLejos: 58
   },
   bajo: {
     nombre: 'bajo',
-    girasoles: 1600,
-    radioCampo: 24,
+    girasoles: 2600,
+    radioCampo: 17,
     segmentosTerreno: 72,
-    petalos: 9,
     pixelRatioMax: 1,
-    nieblaCerca: 10,
-    nieblaLejos: 48
+    estrellas: 700,
+    nieblaCerca: 9,
+    nieblaLejos: 42
   }
 };
 

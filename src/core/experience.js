@@ -28,13 +28,18 @@ const DURACION_LLEGADA = 13;
 const DURACION_REVELACION = 12;
 const DURACION_ANOCHECER = 22;
 
-/** Con el nombre relleno, el primer mensaje se dirige a quien lo abre. */
+/**
+ * Con el nombre relleno, el primer mensaje se encabeza como una nota escrita
+ * a mano: el nombre en su propia línea y el texto debajo. Con dos puntos en
+ * la misma línea suena a etiqueta, no a dedicatoria.
+ */
 function textoLlegada() {
   if (!persona.nombre) return persona.llegada;
-  return `${persona.nombre}: ${persona.llegada.charAt(0).toLowerCase()}${persona.llegada.slice(1)}`;
+  const nombre = persona.nombre.charAt(0).toUpperCase() + persona.nombre.slice(1);
+  return `${nombre},\n${persona.llegada}`;
 }
 
-export function crearExperiencia({ camara, escena, nivel, corazon, atmosfera, movimiento, mensajes }) {
+export function crearExperiencia({ camara, escena, nivel, corazon, atmosfera, movimiento, mensajes, ambiente }) {
   let estado = ESTADO.LLEGADA;
   let travelling = null;
   let tiempoEstado = 0;
@@ -71,7 +76,7 @@ export function crearExperiencia({ camara, escena, nivel, corazon, atmosfera, mo
       duracion: DURACION_LLEGADA,
       curva: CURVAS.suavizar
     });
-    mensajes.mostrar(textoLlegada(), 8);
+    mensajes.mostrar(textoLlegada(), 10);
   }
 
   function iniciarPaseo() {
@@ -88,6 +93,7 @@ export function crearExperiencia({ camara, escena, nivel, corazon, atmosfera, mo
     movimiento.soltar();
     mensajes.ocultar();
     mensajes.ocultarPista();
+    ambiente.enfatizar();
 
     const alturaVuelo = nivel.radioCampo * 1.06;
     travelling = crearTravelling({

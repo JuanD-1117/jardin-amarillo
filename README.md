@@ -35,8 +35,9 @@ avanzar; `A` `S` `D` para el resto.
 - [x] Tres niveles de calidad según backend y dispositivo
 - [x] Despliegue automático a GitHub Pages
 
-Pendiente: audio (requiere aportar los archivos), interacción con flores
-concretas, y ajuste fino de los textos.
+- [x] Viento sintetizado en el navegador, con música opcional
+
+Pendiente: interacción con flores concretas.
 
 ## Personalización
 
@@ -120,6 +121,12 @@ suelo como la colocación de cada girasol. Si divergen, las flores flotan.
 [`src/scene/atmosphere.js`](src/scene/atmosphere.js) deriva de `t` los
 colores del cielo, la niebla, la posición y el color del sol, el brillo de la
 luna y las estrellas. No hay dos animaciones que mantener en fase.
+
+**El viento sonoro se sintetiza, no se descarga.** Ruido rosa filtrado por
+un pasa-bajos que modulan dos osciladores en frecuencias inconmensurables:
+rachas que nunca se repiten, cero bytes de descarga y ninguna duda de
+licencia. La música es opcional y externa; ver
+[`public/audio/LEEME.md`](public/audio/LEEME.md).
 
 **La generación es determinista.** Semilla fija: dos ejecuciones producen el
 mismo campo, lo que permite comparar versiones del generador.

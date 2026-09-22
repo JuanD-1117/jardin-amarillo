@@ -8,10 +8,12 @@ import { crearCampo } from './scene/field.js';
 import { crearAtmosfera } from './scene/atmosphere.js';
 import { crearMovimiento } from './interaction/movement.js';
 import { crearMensajes } from './ui/messages.js';
+import { crearAmbiente } from './audio/ambience.js';
 import { crearIntro } from './ui/intro.js';
 
 const lienzo = document.getElementById('lienzo');
 const botonAvanzar = document.getElementById('avanzar');
+const botonSonido = document.getElementById('sonido');
 
 const reloj = new THREE.Clock();
 
@@ -20,6 +22,7 @@ let escena;
 let camara;
 let atmosfera;
 let experiencia;
+let ambiente;
 
 function ajustarTamano() {
   const ancho = window.innerWidth;
@@ -62,8 +65,10 @@ async function construir() {
 
   const mensajes = crearMensajes();
 
+  ambiente = crearAmbiente({ base: import.meta.env.BASE_URL, boton: botonSonido });
+
   experiencia = crearExperiencia({
-    camara, escena, nivel, corazon, atmosfera, movimiento, mensajes
+    camara, escena, nivel, corazon, atmosfera, movimiento, mensajes, ambiente
   });
 
   window.addEventListener('resize', ajustarTamano);
@@ -99,6 +104,9 @@ function dibujar() {
 
 const intro = crearIntro({
   alEntrar() {
+    // El clic es el gesto que los navegadores exigen para permitir audio.
+    ambiente.iniciar();
+    botonSonido.classList.add('visible');
     reloj.getDelta();
     renderer.setAnimationLoop(dibujar);
   }
